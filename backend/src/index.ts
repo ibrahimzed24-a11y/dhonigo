@@ -23,5 +23,5 @@ app.get('/health', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    logger.info(`DboniGo Backend running on port ${PORT}`);
+    logger.info(`DhoniGo Backend running on port ${PORT}`);
 });

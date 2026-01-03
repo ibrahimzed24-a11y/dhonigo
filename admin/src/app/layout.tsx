@@ -7,7 +7,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <div className="flex">
                     <aside className="w-64 bg-white h-screen border-r">
                         <div className="p-6">
-                            <h1 className="text-2xl font-bold text-cyan-600">DboniGo Admin</h1>
+                            <h1 className="text-2xl font-bold text-cyan-600">DhoniGo Admin</h1>
                         </div>
                         <nav className="mt-6">
                             <a href="#" className="block py-3 px-6 bg-cyan-50 text-cyan-700 border-r-4 border-cyan-600 font-semibold">Dashboard</a>
