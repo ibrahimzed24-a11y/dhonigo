@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  TRAVELER
+  OPERATOR
+  ADMIN
+}
+
+enum PaymentStatus {
+  PENDING
+  VERIFYING
+  PAID
+  CANCELLED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  phone     String   @unique
+  role      Role     @default(TRAVELER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ferries   Ferry[]
+  bookings  Booking[]
+  verifications PaymentVerification[] @relation("AdminVerifier")
+}
+
+model Ferry {
+  id             String   @id @default(cuid())
+  operatorId     String
+  operator       User     @relation(fields: [operatorId], references: [id])
+  route          String   
+  timing         String   
+  pricing        Float
+  totalSeats     Int      @default(40)
+  availableSeats Int      @default(40)
+  createdAt      DateTime @default(now())
+
+  bookings       Booking[]
+}
+
+model Booking {
+  id            String        @id @default(cuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  ferryId       String
+  ferry         Ferry         @relation(fields: [ferryId], references: [id])
+  seats         Int
+  totalAmount   Float
+  paymentStatus PaymentStatus @default(PENDING)
+  paymentProof  String?      
+  referenceCode String        @unique
+  createdAt     DateTime      @default(now())
+
+  verification  PaymentVerification?
+}
+
+model PaymentVerification {
+  id          String   @id @default(cuid())
+  bookingId   String   @unique
+  booking     Booking  @relation(fields: [bookingId], references: [id])
+  adminId     String
+  admin       User     @relation("AdminVerifier", fields: [adminId], references: [id])
+  status      String   
+  timestamp   DateTime @default(now())
+}
+
+model Jetty {
+  id        String @id @default(cuid())
+  name      String @unique
+  latitude  Float?
+  longitude Float?
+}
+
+model Island {
+  id        String @id @default(cuid())
+  name      String @unique
+  latitude  Float?
+  longitude Float?
+}
